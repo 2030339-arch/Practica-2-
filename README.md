@@ -4,25 +4,40 @@ Este proyecto implementa un sistema de control de parpadeo para un LED utilizand
 
 ---
 
-## Descripción del Proyecto
+## Ubicación del Código Principal
 
-El código configura el **GPIO 2** (comúnmente el LED integrado en placas DevKit) y utiliza un temporizador que se dispara cada **1000ms**. Además, demuestra el uso avanzado de los niveles de log de ESP32 para monitorear el estado del sistema.
-
-### Funcionalidades Clave
-
-* **Inicialización Segura:** Uso de `esp_err_t` para verificar que el hardware se configure correctamente.
-* **Temporización no Bloqueante:** Implementación de `xTimerCreate` para manejar el parpadeo.
-* **Ciclo de Logs Dinámico:** El sistema alterna mensajes de `INFO`, `WARNING` y `ERROR` basándose en un contador interno (`count`).
+Si deseas revisar o modificar la lógica del parpadeo y los timers, el archivo principal se encuentra en:
+**`main/blink_timer_led.c`** *(Nota: En proyectos ESP-IDF, la carpeta `main` es donde reside toda la lógica de la aplicación).*
 
 ---
 
-## Estructura del Código
+## Estructura del Proyecto
 
-El flujo de ejecución se divide en tres componentes principales:
+Para entender cómo está organizado este repositorio, aquí tienes los archivos clave:
 
-1. **`init_led()`**: Inicializa el pin de salida y valida la configuración con `ESP_ERROR_CHECK`.
-2. **`blink_led()`**: Cambia el estado lógico del pin (0 o 1) y reporta el éxito o fallo a la consola.
-3. **`timer_callback()`**: Es el corazón del programa. Se ejecuta automáticamente cada segundo para llamar a la función de parpadeo y gestionar la lógica de los logs.
+* **`main/`**: Carpeta que contiene el código fuente.
+    * `blink_timer_led.c`: **Código principal** (configuración de GPIO, Timer y Logs).
+    * `CMakeLists.txt`: Archivo de configuración para la compilación del módulo main.
+* **`CMakeLists.txt`**: Archivo de configuración global del proyecto.
+* **`README.md`**: Este archivo con las instrucciones.
 
+---
+
+## Funcionamiento del Código
+
+El flujo de ejecución se divide en tres componentes principales dentro de `blink_timer_led.c`:
+
+1.  **`init_led()`**: Inicializa el pin de salida (GPIO 2) y valida la configuración.
+2.  **`blink_led()`**: Cambia el estado lógico del pin (0 o 1) y reporta el éxito o fallo a la consola.
+3.  **`timer_callback()`**: Función que el Timer de FreeRTOS llama cada **1000ms** para ejecutar el parpadeo y rotar los niveles de logs.
+
+---
+
+## Niveles de Log Visibles en Consola
+
+El sistema alterna mensajes automáticamente según el contador interno:
+* **Verde (INFO)**: Ciclos 0-9.
+* **Amarillo (WARN)**: Ciclos 10-19.
+* **Rojo (ERROR)**: Ciclos 20-30.
 
 
